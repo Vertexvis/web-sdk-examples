@@ -19,15 +19,15 @@ export async function loadDefaultModel(viewer) {
     .then((scene) => viewer.load(scene));
 }
 
-async function fetchToken() {
-  const resp = await fetch('http://localhost:3000/token');
-  return await resp.json();
-}
-
-async function fetchDefaultModel() {
+export async function fetchDefaultModel() {
   const resp = await fetch('http://localhost:3000/model');
   const json = await resp.json();
   return json.urn;
+}
+
+async function fetchToken() {
+  const resp = await fetch('http://localhost:3000/token');
+  return await resp.json();
 }
 
 function setCredentials(viewer, { clientId, token }) {
