@@ -9,8 +9,12 @@
     "sourceType": "module"
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
+  "plugins": ["html", "prettier"],
   "rules": {
     "prettier/prettier": "error"
+  },
+  "settings": {
+    "html/report-bad-indent": "error",
+    "html/indent": "+2"
   }
 }
