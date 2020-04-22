@@ -19,7 +19,7 @@
   },
   "scripts": {
     "scaffold": "./bin/run scaffold",
-    "start": "node ./src/server.js & http-server examples/ & livereload ./examples/ --wait 1000"
+    "start": "node ./src/server.js & http-server -c-1 examples/ & livereload ./examples/ --wait 1000"
   },
   "dependencies": {
     "@oclif/command": "^1.5.19",
