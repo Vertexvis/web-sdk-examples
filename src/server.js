@@ -9,7 +9,7 @@ const port = process.env.PORT;
 const oauth2Endpoint = process.env.VERTEX_OAUTH2_ENDPOINT;
 const clientId = process.env.VERTEX_CLIENT_ID;
 const clientSecret = process.env.VERTEX_CLIENT_SECRET;
-const model = process.env.DEFAULT_MODEL
+const model = process.env.DEFAULT_MODEL;
 const expiresInSeconds = 2 * 60 * 60; // Duration for how long a token is valid for. Set to 2 hours.
 
 const app = express();

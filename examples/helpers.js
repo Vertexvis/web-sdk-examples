@@ -11,9 +11,12 @@ export async function configureViewer(viewer) {
 }
 
 export async function loadDefaultModel(viewer) {
-  const urn = await fetchDefaultModel()
+  const urn = await fetchDefaultModel();
   const newScene = await viewer.newScene();
-  await newScene.from(urn).execute().then(scene => viewer.load(scene))
+  await newScene
+    .from(urn)
+    .execute()
+    .then((scene) => viewer.load(scene));
 }
 
 async function fetchToken() {

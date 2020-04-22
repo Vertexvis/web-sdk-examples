@@ -7,20 +7,23 @@ document.addEventListener('DOMContentLoaded', () => {
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
   await configureViewer(viewer);
-  await loadDefaultModel(viewer)
+  await loadDefaultModel(viewer);
 
   viewer.addEventListener('tap', async (event) => {
-    const {position} = event.detail
+    const { position } = event.detail;
     const scene = await viewer.scene();
     const raycaster = await scene.raycaster();
 
     const { bomItems } = await raycaster.intersectItems(position).execute();
 
     if (bomItems.length == 0) {
-      scene.clearAllHighlights().execute()
+      scene.clearAllHighlights().execute();
     } else {
       const [item] = bomItems;
-      scene.clearAllHighlights().highlight('#ff0000', s => s.withItemId(item.id)).execute();
+      scene
+        .clearAllHighlights()
+        .highlight('#ff0000', (s) => s.withItemId(item.id))
+        .execute();
     }
   });
 }
