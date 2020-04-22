@@ -18,8 +18,13 @@
     ]
   },
   "scripts": {
-    "format": "yarn lint --fix",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx --ignore-path .gitignore .",
+    "eslint:github-action": "yarn lint",
+    "format": "yarn format:eslint && yarn format:prettier",
+    "format:eslint": "yarn lint:eslint --fix",
+    "format:prettier": "yarn lint:prettier --write",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.html --ignore-path .gitignore .",
+    "lint:prettier": "prettier --check **/*.{html,css,yaml,json} package.json .eslintrc.json",
     "scaffold": "./bin/run scaffold",
     "start": "node ./src/server.js & http-server -c-1 examples/ & livereload ./examples/ --wait 1000"
   },
@@ -36,6 +41,7 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-html": "^6.0.2",
     "eslint-plugin-prettier": "^3.1.3",
     "globby": "^11.0.0",
     "http-server": "^0.12.1",
