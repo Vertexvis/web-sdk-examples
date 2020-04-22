@@ -83,7 +83,7 @@ async function fetchToken(tokenEndpoint, clientId, clientSecret, expiresIn) {
 }
 
 function tokenHandler(tokenEndpoint, clientId, clientSecret, expiresIn) {
-  return async (req, res) => {
+  return async (_, res) => {
     try {
       const token = await getCachedOrRetrieveToken(
         tokenEndpoint,
