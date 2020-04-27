@@ -3,7 +3,6 @@ import steps from './steps.js';
 import {
   applyWorkInstruction,
   applyCamera,
-  applyInitialCamera,
   initializeWorkInstructions,
 } from './instructions.js';
 
@@ -36,8 +35,9 @@ async function main() {
 
 async function applyCameraOnLoad() {
   const viewer = document.querySelector('vertex-viewer');
+  const scene = await viewer.scene();
 
-  await applyInitialCamera(viewer);
+  await applyCamera(scene, 0);
 
   viewer.removeEventListener('frameDrawn', applyCameraOnLoad);
 }
