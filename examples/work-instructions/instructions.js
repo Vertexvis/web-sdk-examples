@@ -3,22 +3,35 @@ import steps from './steps.js';
 
 export async function applyWorkInstruction(scene, stepNumber) {
   if (stepNumber >= 0 && stepNumber < steps.length) {
-    const baseScene = scene.hideAll().clearAllHighlights();
+    const newScene = scene.hideAll().clearAllHighlights();
+    const currentStep = steps[stepNumber];
+    
+    steps.slice(0, stepNumber).forEach((step) =>
+      applyOperations(
+        newScene,
+        step.operations.filter((op) => op.type !== 'highlight'),
+        step.queries
+      )
+    );
+    applyOperations(newScene, currentStep.operations, currentStep.queries);
 
-    steps
-      .slice(0, stepNumber + 1)
-      .forEach((step, index) =>
-        step.operations
-          .filter(
-            (operation) =>
-              operation.type !== 'highlight' || index === stepNumber
-          )
-          .forEach((operation) =>
-            applyOperation(baseScene, operation, step.queries)
-          )
-      );
+    return await newScene.execute();
+  }
+}
 
-    return await baseScene.execute();
+export async function applyCamera(scene, stepNumber) {
+  if (stepNumber >= 0 && stepNumber < steps.length) {
+    const newScene = scene.camera();
+    const currentStep = steps[stepNumber];
+    
+    if (currentStep.camera != null) {
+      newScene.set(currentStep.camera);
+    }
+    if (currentStep.viewAll) {
+      newScene.viewAll();
+    }
+
+    return await newScene.execute();
   }
 }
 
@@ -29,17 +42,25 @@ export async function initializeWorkInstructions(viewer) {
   viewer.load(newScene);
 }
 
-function applyOperation(scene, operation, queries) {
-  switch (operation.type) {
-    case 'show':
-      return scene.show((selector) => applyQueries(selector, queries));
-    case 'highlight':
-      return scene.highlight(operation.value, (selector) =>
-        applyQueries(selector, queries)
-      );
-    default:
-      return scene;
-  }
+export async function applyInitialCamera(viewer) {
+  const scene = await viewer.scene();
+
+  applyCamera(scene, 0);
+}
+
+function applyOperations(scene, operations, queries) {
+  return operations.reduce((newScene, operation) => {
+    switch (operation.type) {
+      case 'show':
+        return newScene.show((selector) => applyQueries(selector, queries));
+      case 'highlight':
+        return newScene.highlight(operation.value, (selector) =>
+          applyQueries(selector, queries)
+        );
+      default:
+        return newScene;
+    }
+  }, scene);
 }
 
 function applyQueries(baseSelector, queries) {
