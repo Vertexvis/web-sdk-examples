@@ -10,11 +10,14 @@ export async function configureViewer(viewer) {
   }
 }
 
-export async function loadDefaultModel(viewer) {
+export async function loadDefaultModel(
+  viewer,
+  sceneTransform = (scene) => scene
+) {
   const urn = await fetchDefaultModel();
   const newScene = await viewer.newScene();
-  await newScene
-    .from(urn)
+
+  await sceneTransform(newScene.from(urn))
     .execute()
     .then((scene) => viewer.load(scene));
 }
