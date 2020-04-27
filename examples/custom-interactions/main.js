@@ -13,7 +13,7 @@ class CustomInteractionHandler {
     this.element.addEventListener('touchstart', this.handleTouchStart);
   }
 
-  handleTouchStart = async (event) => {
+  async handleTouchStart(event) {
     if (event.touches.length === 1) {
       this.tapTimer =
         this.tapTimer == null
@@ -29,14 +29,14 @@ class CustomInteractionHandler {
         scene.camera().viewAll().execute();
       }
     }
-  };
+  }
 
-  handleDoubleClick = async () => {
+  async handleDoubleClick() {
     const viewer = document.querySelector('vertex-viewer');
     const scene = await viewer.scene();
 
     scene.camera().viewAll().execute();
-  };
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
