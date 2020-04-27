@@ -6,7 +6,7 @@ import steps from './steps.js';
  * of the queries provided for that step number, as well as the previous steps
  * before it, filtering out any highlight operations to indicate the parts
  * specific to this step.
- * 
+ *
  * @param {*} scene the scene created through the viewer (await viewer.scene()).
  * @param {*} stepNumber the step number for which the operations should be applied.
  */
@@ -14,7 +14,7 @@ export async function applyWorkInstruction(scene, stepNumber) {
   if (stepNumber >= 0 && stepNumber < steps.length) {
     const newScene = scene.hideAll().clearAllHighlights();
     const currentStep = steps[stepNumber];
-    
+
     steps.slice(0, stepNumber).forEach((step) =>
       applyOperations(
         newScene,
@@ -31,7 +31,7 @@ export async function applyWorkInstruction(scene, stepNumber) {
 /**
  * Applies the camera defined, as well as a fit all if either is present
  * in the provided step number.
- * 
+ *
  * @param {*} scene the scene created through the viewer (await viewer.scene()).
  * @param {*} stepNumber the step number for which the camera should be applied.
  */
@@ -39,7 +39,7 @@ export async function applyCamera(scene, stepNumber) {
   if (stepNumber >= 0 && stepNumber < steps.length) {
     const newScene = scene.camera();
     const currentStep = steps[stepNumber];
-    
+
     if (currentStep.camera != null) {
       newScene.set(currentStep.camera);
     }
@@ -53,7 +53,7 @@ export async function applyCamera(scene, stepNumber) {
 
 /**
  * Creates the initial scene from the first provided work instruction step.
- * 
+ *
  * @param {*} viewer the viewer element to use to create the initial scene.
  */
 export async function initializeWorkInstructions(viewer) {
