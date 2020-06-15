@@ -7,13 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
 
-  viewer.config = {
-    network: {
-      renderingHost: 'wss://rendering.dev.vertexvis.io',
-      apiHost: 'https://api.dev.vertexvis.io',
-    },
-  };
-
   await configureViewer(viewer);
   await loadDefaultModel(viewer);
 
@@ -25,15 +18,16 @@ async function main() {
 
     const { bomItems } = await raycaster.intersectItems(position).execute();
 
-    console.log(position);
     if (bomItems.length == 0) {
       scene.clearAllHighlights().execute();
     } else {
       const [item] = bomItems;
-
       const bb = await boundingBoxFetcher.getBoundingBoxForPart(item.pathId);
+      await scene.camera().fitTo(bb);
 
-      await scene.camera().fitTo(bb).execute();
+      await scene
+        .camera()
+        .flyToPart((selector) => selector.withItemId(item.id));
     }
   });
 }
