@@ -29,7 +29,7 @@ async function main() {
     } else {
       const [item] = bomItems;
 
-      await scene.camera().flyToPart(item.id);
+      await scene.camera().flyToPart(item.id).execute();
     }
   });
 }
