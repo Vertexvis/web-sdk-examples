@@ -1,0 +1,12 @@
+.viewer-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 1000px;
+  height: 1000px;
+}
+
+.viewer {
+  width: 100%;
+  height: 100%;
+}
