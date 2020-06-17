@@ -7,13 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
 
-  viewer.config = {
-    network: {
-      renderingHost: 'wss://rendering.dev.vertexvis.io',
-      apiHost: 'https://api.dev.vertexvis.io',
-    },
-  };
-
   await configureViewer(viewer);
   await loadDefaultModel(viewer);
 
