@@ -1,4 +1,5 @@
-import { configureViewer, loadDefaultModel } from '../helpers.js';
+import { loadDefaultModel } from '../helpers.js';
+import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   main();
@@ -6,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await configureViewer(viewer);
   await loadDefaultModel(viewer);
 
   viewer.addEventListener('tap', async (event) => {
@@ -14,15 +14,20 @@ async function main() {
     const scene = await viewer.scene();
     const raycaster = await scene.raycaster();
 
-    const { bomItems } = await raycaster.intersectItems(position).execute();
+    const result = await raycaster.hitItems(position);
 
-    if (bomItems.length == 0) {
-      scene.clearAllHighlights().execute();
+    if (result.hits && result.hits.length == 0) {
+      await scene
+        .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
+        .execute();
     } else {
-      const [item] = bomItems;
-      scene
-        .clearAllHighlights()
-        .highlight('#ff0000', (s) => s.withItemId(item.id))
+      await scene
+        .items((op) =>
+          op
+            .where((q) => q.withItemId(result.hits[0].itemId.hex))
+            .clearMaterialOverrides()
+            .materialOverride(ColorMaterial.fromHex('#ff0000'))
+        )
         .execute();
     }
   });

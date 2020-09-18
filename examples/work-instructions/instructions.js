@@ -1,4 +1,5 @@
-import { fetchDefaultModel } from '../helpers.js';
+import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
+import { fetchDefaultStreamKey } from '../helpers.js';
 import steps from './steps.js';
 
 /**
@@ -12,19 +13,27 @@ import steps from './steps.js';
  */
 export async function applyWorkInstruction(scene, stepNumber) {
   if (stepNumber >= 0 && stepNumber < steps.length) {
-    const newScene = scene.hideAll().clearAllHighlights();
-    const currentStep = steps[stepNumber];
-
-    steps.slice(0, stepNumber).forEach((step) =>
-      applyOperations(
-        newScene,
-        step.operations.filter((op) => op.type !== 'highlight'),
-        step.queries
+    await scene
+      .items((op) =>
+        steps[stepNumber].operationSets.map((set) =>
+          applyOps(
+            op.where((q) => applyQuery(q, set.query)),
+            set.operations
+          )
+        )
       )
-    );
-    applyOperations(newScene, currentStep.operations, currentStep.queries);
+      .execute();
 
-    return await newScene.execute();
+    // steps.slice(0, stepNumber).forEach((step) =>
+    //   applyOperations(
+    //     newScene,
+    //     step.operations.filter((op) => op.type !== 'highlight'),
+    //     step.queries
+    //   )
+    // );
+    // applyOperations(newScene, currentStep.operations, currentStep.queries);
+
+    // return await newScene.execute();
   }
 }
 
@@ -57,33 +66,49 @@ export async function applyCamera(scene, stepNumber) {
  * @param {*} viewer the viewer element to use to create the initial scene.
  */
 export async function initializeWorkInstructions(viewer) {
-  const urn = await fetchDefaultModel();
-  const scene = await viewer.newScene();
-  const newScene = await applyWorkInstruction(scene.from(urn), 0);
-  viewer.load(newScene);
+  const key = await fetchDefaultStreamKey();
+  await viewer.load(`urn:vertexvis:stream-key:${key}`);
+
+  const scene = await viewer.scene();
+  await applyWorkInstruction(scene, 0);
 }
 
-function applyOperations(scene, operations, queries) {
-  return operations.reduce((newScene, operation) => {
-    switch (operation.type) {
+function applyQuery(builder, query) {
+  switch (query.type) {
+    case 'all':
+      return builder.all();
+    case 'itemId':
+      console.log(query.values.reduce(
+        (result, v) => result.withItemId(v).or(),
+        builder
+      ));
+      return query.values.reduce(
+        (result, v) => result.withItemId(v).or(),
+        builder
+      );
+    case 'suppliedId':
+      return query.values.reduce(
+        (result, v) => result.withSuppliedId(v).or(),
+        builder
+      );
+    default:
+      return builder;
+  }
+}
+
+function applyOps(builder, operations) {
+  return operations.reduce((result, op) => {
+    switch (op.type) {
       case 'show':
-        return newScene.show((selector) => applyQueries(selector, queries));
-      case 'highlight':
-        return newScene.highlight(operation.value, (selector) =>
-          applyQueries(selector, queries)
-        );
+        return result.show();
+      case 'hide':
+        return result.hide();
+      case 'clearMaterialOverrides':
+        return result.clearMaterialOverrides();
+      case 'materialOverride':
+        return result.materialOverride(ColorMaterial.fromHex(op.value));
       default:
-        return newScene;
+        return result;
     }
-  }, scene);
-}
-
-function applyQueries(baseSelector, queries) {
-  return queries.reduce(
-    (selector, query) =>
-      query.type === 'metadata'
-        ? selector.withMetadata(query.key, query.value).or()
-        : selector.withItemId(query.value).or(),
-    baseSelector
-  );
+  }, builder);
 }

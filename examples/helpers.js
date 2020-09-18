@@ -11,18 +11,14 @@ export async function configureViewer(viewer) {
 }
 
 export async function loadDefaultModel(viewer) {
-  const urn = await fetchDefaultModel();
-  const newScene = await viewer.newScene();
-  await newScene
-    .from(urn)
-    .execute()
-    .then((scene) => viewer.load(scene));
+  const key = await fetchDefaultStreamKey();
+  await viewer.load(`urn:vertexvis:stream-key:${key}`);
 }
 
-export async function fetchDefaultModel() {
-  const resp = await fetch('http://localhost:3000/model');
+export async function fetchDefaultStreamKey() {
+  const resp = await fetch('http://localhost:3000/stream-key');
   const json = await resp.json();
-  return json.urn;
+  return json.key;
 }
 
 async function fetchToken() {

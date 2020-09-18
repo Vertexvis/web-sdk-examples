@@ -1,4 +1,4 @@
-import { configureViewer } from '../helpers.js';
+import { loadDefaultModel } from '../helpers.js';
 import steps from './steps.js';
 import {
   applyWorkInstruction,
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await configureViewer(viewer);
+  await loadDefaultModel(viewer);
   await initializeWorkInstructions(viewer);
 
   let currentStep = 0;
@@ -29,24 +29,12 @@ async function main() {
       await applyInstructionAndCamera(viewer, ++currentStep);
     }
   });
-
-  viewer.addEventListener('frameDrawn', applyCameraOnLoad);
-}
-
-async function applyCameraOnLoad() {
-  const viewer = document.querySelector('vertex-viewer');
-  const scene = await viewer.scene();
-
-  await applyCamera(scene, 0);
-
-  viewer.removeEventListener('frameDrawn', applyCameraOnLoad);
 }
 
 async function applyInstructionAndCamera(viewer, step) {
   const currentLabel = document.querySelector('#current-step');
 
   await applyWorkInstruction(await viewer.scene(), step);
-  await applyCamera(await viewer.scene(), step);
-
+ 
   currentLabel.innerHTML = `Viewing Step ${step}`;
 }
