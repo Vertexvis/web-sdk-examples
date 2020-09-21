@@ -1,4 +1,4 @@
-export async function loadDefaultModel(viewer) {
+export async function loadDefaultStreamKey(viewer) {
   const key = await fetchDefaultStreamKey();
   await viewer.load(`urn:vertexvis:stream-key:${key}`);
 }
