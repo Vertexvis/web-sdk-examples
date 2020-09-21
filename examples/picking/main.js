@@ -22,6 +22,8 @@ async function main() {
         .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
         .execute();
     } else {
+      await scene.items(op => op.where(q => q.all()).clearMaterialOverrides()).execute();
+      
       await scene
         .items((op) =>
           op
