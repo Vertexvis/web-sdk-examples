@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
 
-  loadModelByStreamKey(viewer, '8z8SIkjYGrWOUUlizmUVT7x4s-hqMcegAXIK');
+  loadModelByStreamKey(viewer, 'your-stream-key');
 }
 
 /**
