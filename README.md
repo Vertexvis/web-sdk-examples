@@ -2,14 +2,23 @@
 
 This repository contains examples for interacting with the Vertex Web SDK.
 
+---
+***NOTE***
+
+For examples using the [@vertexvis/poc-viewer](https://www.npmjs.com/package/@vertexvis/poc-viewer) package,
+see the [poc-examples](https://github.com/Vertexvis/web-sdk-examples/tree/poc-examples) branch.
+
+---
+
 ## Setup
 
 Make sure you have [Yarn installed](https://classic.yarnpkg.com/en/docs/install).
 
 - Run `yarn install` to install dependencies.
 - Run `cp .env.template .env` to create an environment file.
-- In `.env`, Update the `VERTEX_CLIENT_ID` and `VERTEX_CLIENT_SECRET`
-  environment variables with your application credentials.
+- In `.env`, Update the `DEFAULT_STREAM_KEY` environment variable
+  to a stream-key you want to view. See [this guide](https://developer.vertexvis.com/docs/guides/authentication#in-the-viewer-sdk)
+  for more information on creating a stream-key.
 
 ## Running
 
