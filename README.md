@@ -1,6 +1,6 @@
 # Vertex Web SDK Examples
 
-This repository contains examples for interacting with the Vertex Web SDK.
+This repository contains examples for interacting with the [Vertex Web SDK](https://www.npmjs.com/package/@vertexvis/viewer).
 
 ---
 ***NOTE***
@@ -17,8 +17,8 @@ Make sure you have [Yarn installed](https://classic.yarnpkg.com/en/docs/install)
 - Run `yarn install` to install dependencies.
 - Run `cp .env.template .env` to create an environment file.
 - In `.env`, Update the `DEFAULT_STREAM_KEY` environment variable
-  to a stream-key you want to view. See [this guide](https://developer.vertexvis.com/docs/guides/authentication#in-the-viewer-sdk)
-  for more information on creating a stream-key.
+  to a stream-key you want to view. See [this guide](https://developer.vertexvis.com/docs/guides/authentication)
+  for information on authenticating with Vertex and creating a stream-key.
 
 ## Running
 
