@@ -23,40 +23,6 @@ export async function applyWorkInstruction(scene, stepNumber) {
         )
       )
       .execute();
-
-    // steps.slice(0, stepNumber).forEach((step) =>
-    //   applyOperations(
-    //     newScene,
-    //     step.operations.filter((op) => op.type !== 'highlight'),
-    //     step.queries
-    //   )
-    // );
-    // applyOperations(newScene, currentStep.operations, currentStep.queries);
-
-    // return await newScene.execute();
-  }
-}
-
-/**
- * Applies the camera defined, as well as a fit all if either is present
- * in the provided step number.
- *
- * @param {*} scene the scene created through the viewer (await viewer.scene()).
- * @param {*} stepNumber the step number for which the camera should be applied.
- */
-export async function applyCamera(scene, stepNumber) {
-  if (stepNumber >= 0 && stepNumber < steps.length) {
-    const newScene = scene.camera();
-    const currentStep = steps[stepNumber];
-
-    if (currentStep.camera != null) {
-      newScene.set(currentStep.camera);
-    }
-    if (currentStep.viewAll) {
-      newScene.viewAll();
-    }
-
-    return await newScene.execute();
   }
 }
 
@@ -78,10 +44,9 @@ function applyQuery(builder, query) {
     case 'all':
       return builder.all();
     case 'itemId':
-      console.log(query.values.reduce(
-        (result, v) => result.withItemId(v).or(),
-        builder
-      ));
+      console.log(
+        query.values.reduce((result, v) => result.withItemId(v).or(), builder)
+      );
       return query.values.reduce(
         (result, v) => result.withItemId(v).or(),
         builder

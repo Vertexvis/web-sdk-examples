@@ -2,7 +2,6 @@ import { loadDefaultModel } from '../helpers.js';
 import steps from './steps.js';
 import {
   applyWorkInstruction,
-  applyCamera,
   initializeWorkInstructions,
 } from './instructions.js';
 
@@ -21,20 +20,20 @@ async function main() {
 
   previousButton.addEventListener('click', async () => {
     if (currentStep - 1 >= 0) {
-      await applyInstructionAndCamera(viewer, --currentStep);
+      await applyInstruction(viewer, --currentStep);
     }
   });
   nextButton.addEventListener('click', async () => {
     if (currentStep + 1 < steps.length) {
-      await applyInstructionAndCamera(viewer, ++currentStep);
+      await applyInstruction(viewer, ++currentStep);
     }
   });
 }
 
-async function applyInstructionAndCamera(viewer, step) {
+async function applyInstruction(viewer, step) {
   const currentLabel = document.querySelector('#current-step');
 
   await applyWorkInstruction(await viewer.scene(), step);
- 
+
   currentLabel.innerHTML = `Viewing Step ${step}`;
 }
