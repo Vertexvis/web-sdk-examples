@@ -13,7 +13,9 @@ import steps from './steps.js';
  */
 export async function applyWorkInstruction(scene, stepNumber) {
   if (stepNumber >= 0 && stepNumber < steps.length) {
-    await scene.items(op => op.where(q => q.all()).clearMaterialOverrides()).execute();
+    await scene
+      .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
+      .execute();
 
     await scene
       .items((op) =>
