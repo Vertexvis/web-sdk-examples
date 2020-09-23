@@ -15,7 +15,6 @@ async function main() {
     const raycaster = await scene.raycaster();
 
     const result = await raycaster.hitItems(position);
-    console.log(result);
 
     if (result.hits && result.hits.length == 0) {
       await scene

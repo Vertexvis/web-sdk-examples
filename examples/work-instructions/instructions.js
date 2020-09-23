@@ -48,9 +48,6 @@ function applyQuery(builder, query) {
     case 'all':
       return builder.all();
     case 'itemId':
-      console.log(
-        query.values.reduce((result, v) => result.withItemId(v).or(), builder)
-      );
       return query.values.reduce(
         (result, v) => result.withItemId(v).or(),
         builder

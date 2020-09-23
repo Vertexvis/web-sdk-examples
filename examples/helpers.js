@@ -1,10 +1,24 @@
 export async function loadDefaultStreamKey(viewer) {
-  const key = await fetchDefaultStreamKey();
+  const key = readDefaultStreamKey();
   await viewer.load(`urn:vertexvis:stream-key:${key}`);
 }
 
-export async function fetchDefaultStreamKey() {
-  const resp = await fetch('http://localhost:3000/stream-key');
-  const json = await resp.json();
-  return json.key;
+export function readDefaultStreamKey() {
+  const urlParams = readUrlParams();
+
+  return urlParams.streamkey || '';
+}
+
+function readUrlParams() {
+  return window.location.search
+    .slice(1, window.location.search.length)
+    .split('&')
+    .reduce((result, value) => {
+      const param = value.split('=');
+
+      return {
+        ...result,
+        [param[0].replace('-', '')]: param[1],
+      };
+    }, {});
 }

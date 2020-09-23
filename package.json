@@ -26,7 +26,7 @@
     "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.html --ignore-path .gitignore .",
     "lint:prettier": "prettier --check **/*.{html,css,yaml,json} package.json .eslintrc.json",
     "scaffold": "./bin/run scaffold",
-    "start": "node ./src/server.js & http-server -c-1 examples/ & livereload ./examples/ --wait 1000"
+    "start": "http-server -c-1 examples/ & livereload ./examples/ --wait 1000"
   },
   "dependencies": {
     "@oclif/command": "^1.5.19",
