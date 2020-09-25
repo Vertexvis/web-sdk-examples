@@ -75,15 +75,12 @@ class Scaffold extends Command {
 
   async createJs(filePath) {
     const js = `
-import { configureViewer } from '../helpers.js';
-
 document.addEventListener('DOMContentLoaded', () => {
   main();
 });
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await configureViewer(viewer);
 
   // Your code here
 }

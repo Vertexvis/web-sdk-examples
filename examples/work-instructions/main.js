@@ -1,8 +1,7 @@
-import { configureViewer } from '../helpers.js';
+import { loadDefaultStreamKey } from '../helpers.js';
 import steps from './steps.js';
 import {
   applyWorkInstruction,
-  applyCamera,
   initializeWorkInstructions,
 } from './instructions.js';
 
@@ -12,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await configureViewer(viewer);
+  await loadDefaultStreamKey(viewer);
   await initializeWorkInstructions(viewer);
 
   let currentStep = 0;
@@ -21,32 +20,20 @@ async function main() {
 
   previousButton.addEventListener('click', async () => {
     if (currentStep - 1 >= 0) {
-      await applyInstructionAndCamera(viewer, --currentStep);
+      await applyInstruction(viewer, --currentStep);
     }
   });
   nextButton.addEventListener('click', async () => {
     if (currentStep + 1 < steps.length) {
-      await applyInstructionAndCamera(viewer, ++currentStep);
+      await applyInstruction(viewer, ++currentStep);
     }
   });
-
-  viewer.addEventListener('frameDrawn', applyCameraOnLoad);
 }
 
-async function applyCameraOnLoad() {
-  const viewer = document.querySelector('vertex-viewer');
-  const scene = await viewer.scene();
-
-  await applyCamera(scene, 0);
-
-  viewer.removeEventListener('frameDrawn', applyCameraOnLoad);
-}
-
-async function applyInstructionAndCamera(viewer, step) {
+async function applyInstruction(viewer, step) {
   const currentLabel = document.querySelector('#current-step');
 
   await applyWorkInstruction(await viewer.scene(), step);
-  await applyCamera(await viewer.scene(), step);
 
   currentLabel.innerHTML = `Viewing Step ${step}`;
 }

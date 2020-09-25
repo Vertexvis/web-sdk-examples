@@ -1,4 +1,5 @@
-import { fetchDefaultModel } from '../helpers.js';
+import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
+import { readDefaultStreamKey } from '../helpers.js';
 import steps from './steps.js';
 
 /**
@@ -12,42 +13,20 @@ import steps from './steps.js';
  */
 export async function applyWorkInstruction(scene, stepNumber) {
   if (stepNumber >= 0 && stepNumber < steps.length) {
-    const newScene = scene.hideAll().clearAllHighlights();
-    const currentStep = steps[stepNumber];
+    await scene
+      .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
+      .execute();
 
-    steps.slice(0, stepNumber).forEach((step) =>
-      applyOperations(
-        newScene,
-        step.operations.filter((op) => op.type !== 'highlight'),
-        step.queries
+    await scene
+      .items((op) =>
+        steps[stepNumber].operationSets.map((set) =>
+          applyOps(
+            op.where((q) => applyQuery(q, set.query)),
+            set.operations
+          )
+        )
       )
-    );
-    applyOperations(newScene, currentStep.operations, currentStep.queries);
-
-    return await newScene.execute();
-  }
-}
-
-/**
- * Applies the camera defined, as well as a fit all if either is present
- * in the provided step number.
- *
- * @param {*} scene the scene created through the viewer (await viewer.scene()).
- * @param {*} stepNumber the step number for which the camera should be applied.
- */
-export async function applyCamera(scene, stepNumber) {
-  if (stepNumber >= 0 && stepNumber < steps.length) {
-    const newScene = scene.camera();
-    const currentStep = steps[stepNumber];
-
-    if (currentStep.camera != null) {
-      newScene.set(currentStep.camera);
-    }
-    if (currentStep.viewAll) {
-      newScene.viewAll();
-    }
-
-    return await newScene.execute();
+      .execute();
   }
 }
 
@@ -57,33 +36,45 @@ export async function applyCamera(scene, stepNumber) {
  * @param {*} viewer the viewer element to use to create the initial scene.
  */
 export async function initializeWorkInstructions(viewer) {
-  const urn = await fetchDefaultModel();
-  const scene = await viewer.newScene();
-  const newScene = await applyWorkInstruction(scene.from(urn), 0);
-  viewer.load(newScene);
+  const key = await readDefaultStreamKey();
+  await viewer.load(`urn:vertexvis:stream-key:${key}`);
+
+  const scene = await viewer.scene();
+  await applyWorkInstruction(scene, 0);
 }
 
-function applyOperations(scene, operations, queries) {
-  return operations.reduce((newScene, operation) => {
-    switch (operation.type) {
+function applyQuery(builder, query) {
+  switch (query.type) {
+    case 'all':
+      return builder.all();
+    case 'itemId':
+      return query.values.reduce(
+        (result, v) => result.withItemId(v).or(),
+        builder
+      );
+    case 'suppliedId':
+      return query.values.reduce(
+        (result, v) => result.withSuppliedId(v).or(),
+        builder
+      );
+    default:
+      return builder;
+  }
+}
+
+function applyOps(builder, operations) {
+  return operations.reduce((result, op) => {
+    switch (op.type) {
       case 'show':
-        return newScene.show((selector) => applyQueries(selector, queries));
-      case 'highlight':
-        return newScene.highlight(operation.value, (selector) =>
-          applyQueries(selector, queries)
-        );
+        return result.show();
+      case 'hide':
+        return result.hide();
+      case 'clearMaterialOverrides':
+        return result.clearMaterialOverrides();
+      case 'materialOverride':
+        return result.materialOverride(ColorMaterial.fromHex(op.value));
       default:
-        return newScene;
+        return result;
     }
-  }, scene);
-}
-
-function applyQueries(baseSelector, queries) {
-  return queries.reduce(
-    (selector, query) =>
-      query.type === 'metadata'
-        ? selector.withMetadata(query.key, query.value).or()
-        : selector.withItemId(query.value).or(),
-    baseSelector
-  );
+  }, builder);
 }

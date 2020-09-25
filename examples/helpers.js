@@ -1,36 +1,24 @@
-export async function configureViewer(viewer) {
-  const token = await fetchToken();
-
-  if (viewer != null) {
-    setCredentials(viewer, token);
-  } else {
-    console.error(
-      'Cannot configure viewer. HTML is probably missing a <vertex-viewer> component.'
-    );
-  }
+export async function loadDefaultStreamKey(viewer) {
+  const key = readDefaultStreamKey();
+  await viewer.load(`urn:vertexvis:stream-key:${key}`);
 }
 
-export async function loadDefaultModel(viewer) {
-  const urn = await fetchDefaultModel();
-  const newScene = await viewer.newScene();
-  await newScene
-    .from(urn)
-    .execute()
-    .then((scene) => viewer.load(scene));
+export function readDefaultStreamKey() {
+  const urlParams = readUrlParams();
+
+  return urlParams.streamkey || '';
 }
 
-export async function fetchDefaultModel() {
-  const resp = await fetch('http://localhost:3000/model');
-  const json = await resp.json();
-  return json.urn;
-}
+function readUrlParams() {
+  return window.location.search
+    .slice(1, window.location.search.length)
+    .split('&')
+    .reduce((result, value) => {
+      const param = value.split('=');
 
-async function fetchToken() {
-  const resp = await fetch('http://localhost:3000/token');
-  return await resp.json();
-}
-
-function setCredentials(viewer, { clientId, token }) {
-  viewer.credentialsClientId = clientId;
-  viewer.credentialsToken = token;
+      return {
+        ...result,
+        [param[0].replace('-', '')]: param[1],
+      };
+    }, {});
 }

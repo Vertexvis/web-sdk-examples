@@ -1,4 +1,4 @@
-import { configureViewer, loadDefaultModel } from '../helpers.js';
+import { loadDefaultStreamKey } from '../helpers.js';
 
 class CustomInteractionHandler {
   constructor() {
@@ -120,8 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await configureViewer(viewer);
-  await loadDefaultModel(viewer);
+  await loadDefaultStreamKey(viewer);
 
   viewer.registerInteractionHandler(new CustomInteractionHandler());
 }

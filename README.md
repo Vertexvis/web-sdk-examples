@@ -1,15 +1,21 @@
 # Vertex Web SDK Examples
 
-This repository contains examples for interacting with the Vertex Web SDK.
+This repository contains examples for interacting with the [Vertex Web SDK](https://www.npmjs.com/package/@vertexvis/viewer).
+
+---
+***NOTE***
+
+For examples using the [@vertexvis/poc-viewer](https://www.npmjs.com/package/@vertexvis/poc-viewer) package,
+see the [poc-examples](https://github.com/Vertexvis/web-sdk-examples/tree/poc-examples) branch.
+
+---
 
 ## Setup
 
 Make sure you have [Yarn installed](https://classic.yarnpkg.com/en/docs/install).
 
 - Run `yarn install` to install dependencies.
-- Run `cp .env.template .env` to create an environment file.
-- In `.env`, Update the `VERTEX_CLIENT_ID` and `VERTEX_CLIENT_SECRET`
-  environment variables with your application credentials.
+- Obtain a `stream-key` following [this guide](https://developer.vertexvis.com/docs/guides/authentication)
 
 ## Running
 
@@ -18,8 +24,9 @@ environment includes a server to host static assets from the `examples`
 directory, and a simple backend that demonstrates how the client retrieves a
 token from the Vertex platform.
 
-After you run `yarn start`, open navigate your browser to http://localhost:8080
-to browser the examples. The development environment supports live refresh. Any
+After you run `yarn start`, open navigate your browser to http://localhost:8080?stream-key=YOUR_STREAM_KEY
+to browser the examples. The `stream-key` provided here will be the default used for examples making use 
+of the `loadDefaultStreamKey` helper function. The development environment supports live refresh. Any
 changes you make the examples will automatically refresh your browser.
 
 **Note:** These examples make use of more modern EcmaScript features. You'll
