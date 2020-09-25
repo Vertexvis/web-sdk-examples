@@ -1,5 +1,5 @@
 import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
-import { fetchDefaultStreamKey } from '../helpers.js';
+import { readDefaultStreamKey } from '../helpers.js';
 import steps from './steps.js';
 
 /**
@@ -36,7 +36,7 @@ export async function applyWorkInstruction(scene, stepNumber) {
  * @param {*} viewer the viewer element to use to create the initial scene.
  */
 export async function initializeWorkInstructions(viewer) {
-  const key = await fetchDefaultStreamKey();
+  const key = await readDefaultStreamKey();
   await viewer.load(`urn:vertexvis:stream-key:${key}`);
 
   const scene = await viewer.scene();
