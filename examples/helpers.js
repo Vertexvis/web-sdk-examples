@@ -14,7 +14,7 @@ function readUrlParams() {
     .slice(1, window.location.search.length)
     .split('&')
     .reduce((result, value) => {
-      const param = value.split('=');
+      const param = value.split(/=(.+)/, 2);
 
       return {
         ...result,
