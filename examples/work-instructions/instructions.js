@@ -1,46 +1,90 @@
 import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
-import { readDefaultStreamKey } from '../helpers.js';
 import steps from './steps.js';
+import * as ViewerHelpers from './viewer-helpers.js';
+import * as UIHelpers from './ui-helpers.js';
+import { streamKeyForScene } from './scene-data.js';
 
-/**
- * Applies the operations provided for a specific step number to the result
- * of the queries provided for that step number, as well as the previous steps
- * before it, filtering out any highlight operations to indicate the parts
- * specific to this step.
- *
- * @param {*} scene the scene created through the viewer (await viewer.scene()).
- * @param {*} stepNumber the step number for which the operations should be applied.
- */
-export async function applyWorkInstruction(scene, stepNumber) {
-  if (stepNumber >= 0 && stepNumber < steps.length) {
-    await scene
+let currentStepIndex;
+let currentSceneId;
+let currentSceneId2;
+
+export const nextStep = async () => {
+  await setStep(Math.min(currentStepIndex + 1, steps.length - 1));
+};
+
+export const prevStep = async () => {
+  await setStep(Math.max(0, currentStepIndex - 1));
+};
+
+export async function setStep(stepIndex) {
+  // UIHelpers.setInstructions('...');
+
+  const viewer1 = document.querySelector('#viewer');
+  //const viewer2 = document.querySelector('#viewer2');
+  // tear down previous step
+  if (currentStepIndex !== undefined) {
+    const prevStep = steps[currentStepIndex];
+    if (prevStep.tapHandler !== undefined) {
+      viewer1.removeEventListener('tap', prevStep.tapHandler);
+    }
+    // if (prevStep.tapHandler2 !== undefined) {
+    //   viewer2.removeEventListener('tap', prevStep.tapHandler2);
+    // }
+  }
+  const stepData = steps[stepIndex];
+  if (currentStepIndex === stepIndex) {
+    // reset camera
+    ViewerHelpers.updateCamera(stepData.scene.camera);
+  }
+  currentStepIndex = stepIndex;
+
+  // load step scenes
+  const stepSceneId = stepData.scene.sceneId;
+  let scene;
+  if (stepSceneId !== undefined && currentSceneId !== stepSceneId) {
+    const streamKey = stepData.scene.streamKey;
+    await ViewerHelpers.loadScene(streamKey, viewer1);
+    scene = await viewer1.scene();
+    currentSceneId = stepSceneId;
+  } else {
+    // reset camera
+    ViewerHelpers.updateCamera(stepData.scene.camera);
+    scene = await viewer1.scene();
+    // show all and clear overrides
+    scene
       .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
       .execute();
+  }
 
-    await scene
-      .items((op) =>
-        steps[stepNumber].operationSets.map((set) =>
-          applyOps(
-            op.where((q) => applyQuery(q, set.query)),
-            set.operations
+  // apply step operations
+  if (stepData.operationSets && stepData.operationSets.length) {
+    try {
+      await scene
+        .items((op) =>
+          stepData.operationSets.map((set) =>
+            applyOps(
+              op.where((q) => applyQuery(q, set.query)),
+              set.operations
+            )
           )
         )
-      )
-      .execute();
+        .execute();
+    } catch (e) {
+      return await setStep(stepIndex);
+    }
   }
-}
 
-/**
- * Creates the initial scene from the first provided work instruction step.
- *
- * @param {*} viewer the viewer element to use to create the initial scene.
- */
-export async function initializeWorkInstructions(viewer) {
-  const key = await readDefaultStreamKey();
-  await viewer.load(`urn:vertexvis:stream-key:${key}`);
+  // add tap handlers
+  if (stepData.tapHandler) {
+    viewer1.addEventListener('tap', stepData.tapHandler);
+  }
 
-  const scene = await viewer.scene();
-  await applyWorkInstruction(scene, 0);
+  // set instructions
+  UIHelpers.setInstructions(stepData.title, stepData.instructions);
+
+  if (stepData.duration !== undefined && stepData.duration >= 0) {
+    setTimeout(() => nextStep(), stepData.duration);
+  }
 }
 
 function applyQuery(builder, query) {
