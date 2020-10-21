@@ -1,0 +1,158 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/viewer.css" />
+  <script type="module" src="https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/viewer.esm.js"></script>
+  <script nomodule src="https://unpkg.com/@vertexvis/viewer@latest/dist/viewer.js"></script>
+  <style type="text/css">
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: auto;
+      height: auto;
+      overflow: hidden;
+    }
+  </style>
+  <script>
+    const ringIds_1 = [
+      "8f0cf0ad-538b-4609-9d86-d5b351d45279",
+      "be170e6a-79ac-480a-8f5c-153bfa554aac",
+      "af87eeba-971d-4c02-94df-1c1e1266c033",
+      "12aadd71-8677-4408-b07f-f6a3b07227e2",
+      "f6aba98c-1197-48cd-a3bd-781b6225bda3",
+      "faed15ff-4d75-49ea-ba44-157fcb033cb8",
+      "7d0d145a-a1e8-46b1-9f15-5673852c2fc2",
+      "96260fb7-a432-4557-a904-ba69acba17ef",
+      "46931c6d-eabb-4bd9-bffd-de581c681f42",
+      "46931c6d-eabb-4bd9-bffd-de581c681f42",
+      "b5de9847-9cb3-49cc-a3b6-8de0823d5680",
+      "a4596d3d-f204-4ffe-a206-ff05422f8402",
+    ];
+
+    const ringIds_2 = [
+      "fa613330-81d6-4986-b4ef-3621e46cef8d",
+      "d79610be-c8c0-4ec4-88ff-bf8c3d469784",
+      "a0113345-78e8-4d12-8709-b15f15388efa",
+      "0a6342f1-258a-486d-8ff3-f83fb816b6ff",
+      "7896f0c2-c3a5-4e59-9008-4686dc905485",
+      "9799ac29-3b27-4f50-8d9e-e033de47365f",
+      "044377cd-41c6-44cc-9e4e-87321ad5f701",
+      "0171f088-070b-47c3-b72e-95e3763e7ba4",
+      "b82e3892-926c-4082-a2bd-aca5abd5f2c1",
+      "f4944030-7a41-45ce-ae02-9e50258a05c0",
+      "0c5b38aa-aa25-4de0-a15f-64f8aab5a5f8",
+      "1fa67fb2-6a25-4181-939e-f6704a39527f"
+    ];
+
+    const main = async () => {
+      // load left view
+      const viewer1 = document.querySelector('#viewer');
+      viewer1.load(`urn:vertexvis:stream-key:EAeadOlWAmEwa7_lrusZPqwcCLXdGVhF14jf`);
+
+      // TODO: hide plates and disc assemblies for left view initially
+
+      // load right view
+      const viewer2 = document.querySelector('#viewer2');
+      await viewer2.load(`urn:vertexvis:stream-key:OQn2nRpb5qtJzgpjzVCR5YokEiD7Q7amG0XG`);
+
+      // add click handler for left view
+      viewer1.addEventListener('tap', async function (event) {
+        const viewer1 = document.querySelector('#viewer');
+        const { position } = event.detail;
+        const scene = await viewer1.scene();
+        const raycaster = await scene.raycaster();
+        const hitItems = await raycaster.hitItems(position);
+        console.log(hitItems);
+
+        if (hitItems['hits'].length == 0) {
+          scene.items(op => [
+            op.where(q => q.all()
+            ).clearMaterialOverrides()
+          ])
+            .execute();
+        } else {
+          const clickedSceneItemId = hitItems['hits'][0]['itemId']['hex'];
+          scene
+            .items(op => [
+              op
+                .where(q =>
+                  q.withItemId(clickedSceneItemId)
+                )
+                .hide()
+            ])
+            .execute();
+
+          const itemIndex = ringIds_1.indexOf(clickedSceneItemId);
+          if (itemIndex >= 0) {
+            // show part in second view
+            const viewer2 = document.querySelector('#viewer2');
+            const scene2 = await viewer2.scene();
+            scene2
+              .items(op => [
+                op
+                  .where(q =>
+                    q.withItemId(ringIds_2[itemIndex])
+                  )
+                  .show()
+              ])
+              .execute();
+          }
+        }
+      });
+
+      // add click handler for right view
+      viewer2.addEventListener('tap', async function (event) {
+        const viewer2 = document.querySelector('#viewer2');
+        const { position } = event.detail;
+        const scene2 = await viewer2.scene();
+        const raycaster = await scene2.raycaster();
+        const hitItems = await raycaster.hitItems(position);
+        console.log(hitItems);
+
+        if (hitItems['hits'].length > 0) {
+          const selectedPart = hitItems['hits'][0]['itemId']['hex'];
+          // hide part clicked in right view
+          scene2
+            .items(op => [
+              op
+                .where(q =>
+                  q.withItemId(selectedPart)
+                )
+                .hide()
+            ])
+            .execute();
+
+          const itemIndex = ringIds_2.indexOf(selectedPart);
+          if (itemIndex >= 0) {
+            // now show part clicked in left view
+            const viewer1 = document.querySelector('#viewer');
+            const scene1 = await viewer1.scene();
+            scene1
+              .items(op => [
+                op
+                  .where(q =>
+                    q.withItemId(ringIds_1[itemIndex])
+                  )
+                  .show()
+              ])
+              .execute();
+          }
+        }
+      });
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      main();
+    });
+  </script>
+</head>
+
+<body>
+  <div style="width: auto; height: 100%; display: flex;">
+    <vertex-viewer id="viewer" style="width: 50%; height: 100%;"></vertex-viewer>
+    <vertex-viewer id="viewer2" style="width: 50%; height: 100%;"></vertex-viewer>
+  </div>
+</body>
+
+</html>

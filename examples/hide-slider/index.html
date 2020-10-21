@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<title>hide-slider</title>
+
+<head>
+  <!-- Live reload script -->
+  <script src="http://localhost:35729/livereload.js?snipver=1"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/ui@latest/dist/tailwind-ui.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/viewer.css" />
+  <script type="module" src="https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/viewer.esm.js"></script>
+  <script nomodule src="https://unpkg.com/@vertexvis/viewer@latest/dist/viewer.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script type="module" src="main.js"></script>
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="viewer-container">
+      <!-- Viewer instance -->
+      <vertex-viewer id="viewer" class="viewer">
+      </vertex-viewer>
+      <!-- Container for viewer overlays -->
+      <div id="overlay-container" class="viewer-overlay">
+      </div>
+    </div>
+    <div class="slidecontainer px-2">
+      <input type="range" min="0" max="688" value="0" class="slider" id="itemRange">
+    </div>
+  </div>
+</body>
+
+</html>

@@ -140,6 +140,31 @@ export const hideSceneItemById = async (sceneItemId, viewerInstance) => {
     .execute();
 };
 
+export const hideSceneItems = async (sceneItemIds, viewerInstance) => {
+  const viewer = viewerInstance || document.querySelector('#viewer');
+  const scene = await viewer.scene();
+  await scene
+    .items((op) =>
+      sceneItemIds.map((sceneItemId) => {
+        return op.where((q) => q.withItemId(sceneItemId)).hide();
+      })
+    )
+    .execute();
+};
+
+export const showSceneItems = async (sceneItemIds, viewerInstance) => {
+  const viewer = viewerInstance || document.querySelector('#viewer');
+  const scene = await viewer.scene();
+  await scene
+    .items((op) =>
+      sceneItemIds.map((sceneItemId) => {
+        return op.where((q) => q.withItemId(sceneItemId)).show();
+      })
+    )
+    .execute();
+};
+
+
 export const hideSceneItemBySuppliedId = async (suppliedId, viewerInstance) => {
   const viewer = viewerInstance || document.querySelector('#viewer');
   const scene = await viewer.scene();
@@ -162,6 +187,12 @@ export const showSceneItemBySuppliedId = async (suppliedId, viewerInstance) => {
   await scene
     .items((op) => [op.where((q) => q.withSuppliedId(suppliedId)).show()])
     .execute();
+};
+
+export const showAll = async (viewerInstance) => {
+  const viewer = viewerInstance || document.querySelector('#viewer');
+  const scene = await viewer.scene();
+  await scene.items((op) => [op.where((q) => q.all()).show()]).execute();
 };
 
 export const highlightSceneItem = async (

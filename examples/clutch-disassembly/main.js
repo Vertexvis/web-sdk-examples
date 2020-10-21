@@ -1,5 +1,5 @@
 import { prevStep, nextStep, setStep } from './instructions.js';
-import { hideOverlay } from './viewer-helpers.js';
+import { hideOverlay } from '../viewer-helpers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   main();

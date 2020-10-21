@@ -1,6 +1,6 @@
 import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
 import steps from './steps.js';
-import * as ViewerHelpers from './viewer-helpers.js';
+import * as ViewerHelpers from '../viewer-helpers.js';
 import * as UIHelpers from './ui-helpers.js';
 import { streamKeyForScene } from './scene-data.js';
 
@@ -8,8 +8,9 @@ let currentStepIndex;
 let currentSceneId;
 let currentSceneId2;
 
-export const nextStep = async () => {
-  await setStep(Math.min(currentStepIndex + 1, steps.length - 1));
+export const nextStep = async (nextIndex) => {
+  let next = nextIndex === undefined ? currentStepIndex + 1 : nextIndex;
+  await setStep(Math.min(next, steps.length - 1));
 };
 
 export const prevStep = async () => {
@@ -48,30 +49,30 @@ export async function setStep(stepIndex) {
     currentSceneId = stepSceneId;
   } else {
     // reset camera
-    ViewerHelpers.updateCamera(stepData.scene.camera);
+    // ViewerHelpers.updateCamera(stepData.scene.camera);
     scene = await viewer1.scene();
     // show all and clear overrides
-    scene
-      .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
-      .execute();
+    // await scene
+    //   .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
+    //   .execute();
   }
 
   // apply step operations
   if (stepData.operationSets && stepData.operationSets.length) {
-    try {
-      await scene
-        .items((op) =>
-          stepData.operationSets.map((set) =>
-            applyOps(
-              op.where((q) => applyQuery(q, set.query)),
-              set.operations
-            )
+    // try {
+    await scene
+      .items((op) =>
+        stepData.operationSets.map((set) =>
+          applyOps(
+            op.where((q) => applyQuery(q, set.query)),
+            set.operations
           )
         )
-        .execute();
-    } catch (e) {
-      return await setStep(stepIndex);
-    }
+      )
+      .execute();
+    // } catch (e) {
+    //   return await setStep(stepIndex);
+    // }
   }
 
   // add tap handlers
@@ -79,11 +80,16 @@ export async function setStep(stepIndex) {
     viewer1.addEventListener('tap', stepData.tapHandler);
   }
 
+  if (stepData.camera !== undefined) {
+    // set camera
+    ViewerHelpers.updateCamera(stepData.camera);
+  }
+
   // set instructions
   UIHelpers.setInstructions(stepData.title, stepData.instructions);
 
   if (stepData.duration !== undefined && stepData.duration >= 0) {
-    setTimeout(() => nextStep(), stepData.duration);
+    setTimeout(() => nextStep(stepData.nextIndex), stepData.duration);
   }
 }
 
