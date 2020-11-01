@@ -3,3 +3,28 @@ c9605add-9a7d-4d0a-bea9-aa7bbacb4a05
 
 Stream Key:
 NJzBRaqssV_qCHr-TMpX51gUETeNHK51mXYF
+
+
+IDEAS:
+- hide parts in reverse order of assembly.  slider 'rolls back' assembly.
+- ordered list comes from MPM configs
+
+- The lower fidelity representation of the model is the view cube, which is a lightweight 3D mesh of the model, textured with rendered images.
+	- View cube represents bounding box of the scene, with sub controls to change 'hide box'
+	- for VR, we just need to make the view cube better over time? full screen
+- This hide slider is basically like cross sectioning, only 'live'
+- Should add ability to cross section a subset of parts
+	- maybe cross sectioning in platform is applied per scene item, or based on a query
+	- could be 'all' or a subset of scene items
+- Snapshots are just serialized/persisted scene views.
+- When passing in an array of operations to the web sdk, have it ignore any entries that are null or undefined
+	- able to use ternary operators inline
+
+
+BUGS:
+- If you try to send more than 200 operations in a web sdk call, it should error on the client??  Right now user does not get any meaningful error response.
+- 
+
+From Gerardo Diaz to Everyone: (10:20 AM)
+ diazgerardo@johndeere.com 
+ hernandezmanuele@johndeere.com

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>Stencil Component Starter</title>
+
+  <script type="module" src="/build/viewer.esm.js"></script>
+  <script nomodule src="/build/viewer.js"></script>
+  <link rel="stylesheet" href="/build/viewer.css" />
+
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    #viewer {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+  <script type="module">
+    window.addEventListener('DOMContentLoaded', () => {
+      main();
+    });
+
+    async function main() {
+      const viewer = document.querySelector('#viewer');
+      viewer.config = {
+        flags: { logWsMessages: true },
+      };
+
+      viewer.addEventListener('tap', async event => {
+        const pt = event.detail;
+        console.log('pt', pt.position);
+        const scene = await viewer.scene();
+        const raycaster = scene.raycaster();
+        const hits = await raycaster.hitItems(pt.position);
+
+        console.log('hits', hits);
+        console.log('itemsuppliedid', hits.hits[0].itemSuppliedId.value);
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <vertex-viewer id="viewer" config-env="platdev" src="urn:vertexvis:stream-key:Rf9Y5sais-HjJOTQeW9VPSD5GRe-wSjhtgZM">
+  </vertex-viewer>
+</body>
+
+</html>

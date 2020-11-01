@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/ui@latest/dist/tailwind-ui.min.css">
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <!-- <script type="module" src="index.js"></script> -->
+
+</head>
+
+<body>
+  <div class="grid grid-rows-6 grid-cols-5 gap-2 px-4 py-4 h-full w-full bg-blue-400">
+
+    <!-- MAIN VIEWER WINDOW -->
+    <div class="col-span-4 row-span-6 bg-white relative">
+      <div id="viewer-container"
+        class="absolute inset-0 w-full h-full transition-opacity duration-300 ease-in-out opacity-0">
+        <!-- HIDDEN VIEWER -->
+        <vertex-viewer id="viewer2" class="absolute inset-0 w-full h-full">
+        </vertex-viewer>
+        <!-- PRIMARY VIEWER -->
+        <vertex-viewer id="viewer"
+          class="absolute inset-0 w-full h-full transition-opacity duration-300 ease-in opacity-70">
+        </vertex-viewer>
+      </div>
+      <!-- VIEWER OVERLAYS -->
+      <div id="overlay-container" class="absolute hidden">
+      </div>
+    </div>
+
+
+    <!-- HIDDEN LIST -->
+    <div class="col-span-1 col-start-5 row-span-6 row-start-1 overflow-hidden flex flex-col">
+      <div class="bg-gray-200 ">
+        <p class="text-3xl px-4 py-2 text-gray-900 flex-auto">
+          Hidden Parts
+        </p>
+      </div>
+      <div id="hidden-list-container" class="flex-1 overflow-y-auto border bg-gray-200"></div>
+      <div>
+        <div class="flex mt-2">
+          <div class="inline-flex shadow flex-auto">
+            <a href="#" id="show-last-button"
+              class="flex-1 text-center justify-center px-5 py-10 border border-transparent text-2xl leading-6 font-medium text-white bg-gray-900 hover:bg-gray-700 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+              SHOW LAST</a>
+          </div>
+          <div class="inline-flex ml-2 shadow flex-auto">
+            <a href="#" id="show-all-button"
+              class="flex-1 text-center justify-center px-5 py-10 border border-transparent text-2xl leading-6 font-medium text-gray-900 bg-white hover:bg-gray-100 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+              SHOW ALL
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- VIEWER2 WINDOW -->
+    <!-- <div class="col-span-1 col-start-5 row-span-2 row-start-3 bg-white border border-gray-900">
+
+    </div> -->
+    <!-- VIEWER3 WINDOW -->
+    <!-- <div class="col-span-1 col-start-5 row-span-2 row-start-5 bg-white border border-gray-900">
+    </div> -->
+
+    <!-- BOTTOM CONTROLS -->
+    <div class="col-span-4 row-start-7">
+      <div class="space-y-1">
+        <div class="slidecontainer">
+          <input type="range" min="0" max="641" value="641" class="slider" id="itemRange">
+        </div>
+        <div class="bg-gray-50 h-12 flex justify-left items-center">
+          <div id="statusbar" class="text-xl px-4">
+            <p><b>Drag the slider</b> to the left to roll back assembly. <b>Double Tap</b> to hide parts. <b>Single
+                Tap</b> to select.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM RIGHT CONTROLS -->
+    <div class="col-span-1 col-start-5 row-span-1 row-start-7 flex">
+      <div class="inline-flex shadow flex-auto">
+        <a href="#" id="select-part-button"
+          class="flex-1 text-center justify-center px-5 py-10 border border-transparent text-2xl leading-6 font-medium text-white bg-red-800 hover:bg-red-700 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+          LOG DEFECT</a>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- <div class="main-container">
+    <div class="viewer-container">
+    </div>
+    <div class="bg-gray-500 px-2 py-2 space-y-1">
+      <div class="slidecontainer">
+        <input type="range" min="0" max="641" value="0" class="slider" id="itemRange">
+      </div>
+    </div>
+  </div> -->
+</body>
+
+</html>

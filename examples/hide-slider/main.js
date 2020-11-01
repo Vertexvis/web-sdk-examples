@@ -7,7 +7,6 @@ import {
   highlightSceneItem,
   moveOverlay,
   setOverlay,
-  showAll,
   showOverlay,
   showSceneItems,
 } from '../viewer-helpers.js';
@@ -45,16 +44,24 @@ const updateItemView = async () => {
     return;
   }
   if (targetItemIndex !== currentItemIndex) {
-    pendingItemIndex = targetItemIndex;
-    // console.log(`updateItemView [pendingItemIndex=${pendingItemIndex}]`);
     if (targetItemIndex > currentItemIndex) {
+      pendingItemIndex = Math.min(targetItemIndex, currentItemIndex + 200);
+      // console.log(`updateItemView [pendingItemIndex=${pendingItemIndex}]`);
       // hide items
-      const itemsToHide = sceneItemList.slice(currentItemIndex, targetItemIndex);
+      const itemsToHide = sceneItemList.slice(
+        currentItemIndex,
+        pendingItemIndex
+      );
       // console.log(`updateItemView [hiding ${itemsToHide.length} items]`);
       await hideSceneItems(itemsToHide);
     } else if (targetItemIndex < currentItemIndex) {
+      pendingItemIndex = Math.max(targetItemIndex, currentItemIndex - 200);
+      // console.log(`updateItemView [pendingItemIndex=${pendingItemIndex}]`);
       // show items
-      const itemsToShow = sceneItemList.slice(targetItemIndex, currentItemIndex);
+      const itemsToShow = sceneItemList.slice(
+        pendingItemIndex,
+        currentItemIndex
+      );
       // console.log(`updateItemView [showing ${itemsToShow.length} items]`);
       await showSceneItems(itemsToShow);
     }
@@ -94,8 +101,6 @@ async function tapHandler(event) {
     console.log(`'${hitItemId}',`);
     if (event.detail.shiftKey) {
       hideSceneItemById(hitItemId);
-    } else if (event.detail.ctrlKey) {
-      showAll();
     } else {
       await highlightSceneItem(hitItemId, '#fccc04', 1500);
       moveOverlay({ x: outerPosition.x + 20, y: outerPosition.y - 10 });
