@@ -22,16 +22,12 @@ async function main() {
         .execute();
     } else {
       await scene
-        .items((op) => op.where((q) => q.all()).clearMaterialOverrides())
-        .execute();
-
-      await scene
-        .items((op) =>
+        .items((op) => [
+          op.where((q) => q.all()).clearMaterialOverrides(),
           op
             .where((q) => q.withItemId(result.hits[0].itemId.hex))
-            .clearMaterialOverrides()
-            .materialOverride(ColorMaterial.fromHex('#ff0000'))
-        )
+            .materialOverride(ColorMaterial.fromHex('#ff0000')),
+        ])
         .execute();
     }
   });
