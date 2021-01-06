@@ -1,4 +1,4 @@
-import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
+import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@0.9.x/dist/viewer/index.esm.js';
 import { readDefaultStreamKey } from '../helpers.js';
 import steps from './steps.js';
 

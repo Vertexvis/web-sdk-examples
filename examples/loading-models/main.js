@@ -1,11 +1,14 @@
+import { readDefaultStreamKey } from '../helpers.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   main();
 });
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
+  const streamKey = readDefaultStreamKey();
 
-  loadModelByStreamKey(viewer, 'your-stream-key');
+  loadModelByStreamKey(viewer, streamKey);
 }
 
 /**
