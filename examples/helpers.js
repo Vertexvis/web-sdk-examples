@@ -18,7 +18,7 @@ function readUrlParams() {
 
       return {
         ...result,
-        [param[0].replace('-', '')]: param[1],
+        [param[0].replace('-', '').toLowerCase()]: param[1],
       };
     }, {});
 }

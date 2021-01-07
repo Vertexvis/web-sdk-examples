@@ -1,5 +1,5 @@
 import { loadDefaultStreamKey } from '../helpers.js';
-import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/viewer/index.esm.js';
+import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@0.9.x/dist/viewer/index.esm.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   main();
