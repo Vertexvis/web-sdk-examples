@@ -1,7 +1,8 @@
 import { loadDefaultStreamKey } from '../helpers.js';
 import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@0.9.x/dist/esm/index.mjs';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.customElements.whenDefined('vertex-viewer');
   main();
 });
 

@@ -5,7 +5,8 @@ import {
   initializeWorkInstructions,
 } from './instructions.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.customElements.whenDefined('vertex-viewer');
   main();
 });
 
