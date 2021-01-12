@@ -5,12 +5,12 @@ import {
   initializeWorkInstructions,
 } from './instructions.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await window.customElements.whenDefined('vertex-viewer');
+document.addEventListener('DOMContentLoaded', () => {
   main();
 });
 
 async function main() {
+  await window.customElements.whenDefined('vertex-viewer');
   const viewer = document.querySelector('vertex-viewer');
   await loadDefaultStreamKey(viewer);
   await initializeWorkInstructions(viewer);

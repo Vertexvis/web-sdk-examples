@@ -1,4 +1,5 @@
 import { loadDefaultStreamKey } from '../helpers.js';
+import { defineCustomElements } from '@vertexvis/viewer/loader';
 
 class CustomInteractionHandler {
   constructor() {
@@ -114,12 +115,13 @@ class CustomInteractionHandler {
   }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await window.customElements.whenDefined('vertex-viewer');
+document.addEventListener('DOMContentLoaded', () => {
+  defineCustomElements(window).then(() => main());
   main();
 });
 
 async function main() {
+  await window.customElements.whenDefined('vertex-viewer');
   const viewer = document.querySelector('vertex-viewer');
   await loadDefaultStreamKey(viewer);
 
