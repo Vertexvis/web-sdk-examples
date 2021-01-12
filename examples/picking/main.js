@@ -1,8 +1,9 @@
 import { loadDefaultStreamKey } from '../helpers.js';
 import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@0.9.x/dist/esm/index.mjs';
+import { defineCustomElements } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/esm/loader.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
-  main();
+  defineCustomElements(window).then(() => main());
 });
 
 async function main() {

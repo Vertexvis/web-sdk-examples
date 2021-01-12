@@ -1,4 +1,5 @@
 import { loadDefaultStreamKey } from '../helpers.js';
+import { defineCustomElements } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/esm/loader.mjs';
 
 class CustomInteractionHandler {
   constructor() {
@@ -115,7 +116,7 @@ class CustomInteractionHandler {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  main();
+  defineCustomElements(window).then(() => main());
 });
 
 async function main() {
