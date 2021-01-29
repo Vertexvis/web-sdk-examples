@@ -1,4 +1,4 @@
-import { loadDefaultStreamKey } from '../helpers.js';
+import { loadViewerWithQueryParams } from '../helpers.js';
 import steps from './steps.js';
 import {
   applyWorkInstruction,
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await loadDefaultStreamKey(viewer);
+  await loadViewerWithQueryParams(viewer);
   await initializeWorkInstructions(viewer);
 
   let currentStep = 0;

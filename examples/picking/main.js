@@ -1,4 +1,4 @@
-import { loadDefaultStreamKey } from '../helpers.js';
+import { loadViewerWithQueryParams } from '../helpers.js';
 import { ColorMaterial } from 'https://unpkg.com/@vertexvis/viewer@0.9.x/dist/esm/index.mjs';
 import { defineCustomElements } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/esm/loader.mjs';
 
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await loadDefaultStreamKey(viewer);
+  await loadViewerWithQueryParams(viewer);
 
   viewer.addEventListener('tap', async (event) => {
     const { position } = event.detail;

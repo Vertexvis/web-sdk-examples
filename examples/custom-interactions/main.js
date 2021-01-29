@@ -1,4 +1,4 @@
-import { loadDefaultStreamKey } from '../helpers.js';
+import { loadViewerWithQueryParams } from '../helpers.js';
 import { defineCustomElements } from 'https://unpkg.com/@vertexvis/viewer@latest/dist/esm/loader.mjs';
 
 class CustomInteractionHandler {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function main() {
   const viewer = document.querySelector('vertex-viewer');
-  await loadDefaultStreamKey(viewer);
+  await loadViewerWithQueryParams(viewer);
 
   viewer.registerInteractionHandler(new CustomInteractionHandler());
 }
