@@ -25,6 +25,12 @@ async function main() {
   const viewRightBtn = document.querySelector('#view-right-btn');
   const viewFrontBtn = document.querySelector('#view-front-btn');
   const viewBackBtn = document.querySelector('#view-back-btn');
+  const viewFrontTopLeftBtn = document.querySelector(
+    '#view-front-top-left-btn'
+  );
+  const viewFrontBottomLeftBtn = document.querySelector(
+    '#view-front-bottom-left-btn'
+  );
 
   await loadViewerWithQueryParams(viewer);
 
@@ -37,6 +43,8 @@ async function main() {
   viewRightBtn.addEventListener('click', right(viewer));
   viewFrontBtn.addEventListener('click', front(viewer));
   viewBackBtn.addEventListener('click', back(viewer));
+  viewFrontTopLeftBtn.addEventListener('click', frontTopLeft(viewer));
+  viewFrontBottomLeftBtn.addEventListener('click', frontBottomLeft(viewer));
 }
 
 /**
@@ -145,6 +153,22 @@ function left(viewer) {
 function right(viewer) {
   return standardView(viewer, {
     position: Vector3.right(),
+    lookAt: Vector3.origin(),
+    up: Vector3.up(),
+  });
+}
+
+function frontTopLeft(viewer) {
+  return standardView(viewer, {
+    position: Vector3.add(Vector3.back(), Vector3.up(), Vector3.left()),
+    lookAt: Vector3.origin(),
+    up: Vector3.up(),
+  });
+}
+
+function frontBottomLeft(viewer) {
+  return standardView(viewer, {
+    position: Vector3.add(Vector3.back(), Vector3.down(), Vector3.left()),
     lookAt: Vector3.origin(),
     up: Vector3.up(),
   });
