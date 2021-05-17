@@ -2,13 +2,9 @@
 
 This repository contains examples for interacting with the [Vertex Web SDK](https://www.npmjs.com/package/@vertexvis/viewer).
 
----
+## Deprecation Warning
 
-**_NOTE_**
-
-For examples using the [@vertexvis/poc-viewer](https://www.npmjs.com/package/@vertexvis/poc-viewer) package, see the [poc-examples](https://github.com/Vertexvis/web-sdk-examples/tree/poc-examples) branch.
-
----
+This repository is deprecated. See `examples` directory in [vertex-web-sdk](https://github.com/Vertexvis/vertex-web-sdk).
 
 ## Setup
 
